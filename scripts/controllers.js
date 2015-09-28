@@ -6,7 +6,11 @@ angular.module("angularRestfulAuth", [
     .controller('HomeCtrl',  ['$rootScope', '$scope', '$location', '$localStorage', 'Main', function($rootScope, $scope, $location, $localStorage, Main)
 {
 	//alert('here');
-	    $scope.signin = function() {
+	    
+		
+		$scope.user={};
+		
+		$scope.signin = function() {
 			alert('signin');
             var formData = {
                 email: $scope.email,
@@ -17,14 +21,29 @@ angular.module("angularRestfulAuth", [
                 if (res.type == false) {
                     alert(res.data)    
                 } else {
-                   // $localStorage.token = res.data.token;
-                    alert('its ok')
+                   $localStorage.token = res.data.token;
+                    $scope.user = res.data;
+
+					alert('its ok')
 					//window.location = "/";    
                 }
             }, function() {
                 $rootScope.error = 'Failed to signin';
             })
         };
+	
+		$scope.getme = function() {
+			alert('getme');
+           Main.me(function(res) {
+                //$scope.myDetails = res;
+				$scope.user = res.data;
+				alert('its ok')
+            }, function() {
+                $rootScope.error = 'Failed to fetch details';
+            })
+        };
+	
+		$scope.tokenll = $localStorage.token;
 }])
  .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
         var baseUrl = "http://localhost:3001";
